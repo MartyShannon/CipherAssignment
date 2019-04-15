@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
-char rotationEncoder(char string[]);
+char rotationEncoder(char x, int r);
+char rotationDecoder(char x, int r);
 
 int main()
 {
@@ -13,47 +14,59 @@ int main()
     switch(f) 
     {
         case 1:
+/*______________________________________________________________________________________________________________________________________________________________
+Case 1 -- Encypting Phrase with Roatation Cyper, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
+rotationEncoder, prints the text file to stdout encrypted.
+________________________________________________________________________________________________________________________________________________________________*/
         {
-            char string[100];
+            FILE *input;
             int rotation = 0;
-            int index = 0;
             
-            printf("Text you would like to encode, All in caps and no spaces:");
-            gets(string);
-            //scanf("%s", &string[0]);     //%s scans for a string variable, not sure about white space though and how to avoid
-            //printf("%s\n", &string[0]);        prints original input for testing
+            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be coded inside
             
-            printf("Now enter a value you would like the cipher to rotate the alphabet by (Number 1-25):");
-            scanf("%d", &rotation);
+            printf("Enter Rotation Amount:");
+            scanf("%d", &rotation);     //Amount in which the alphabet is rotated by
             
-            
-            while(string[index] != 0)
+            while(feof(input) == 0)     //Loop runs, until the file pointer has reached the end of the file
             {
-                string[index] += rotation;   //This moves all letters up by the designated rotation amount.
-            
-                   if(string[index] > 90)   //if string number greater than 90 it will minus 26 ie. send the letters at the end of the alphabet to the start.
-                   {
-                       string[index] -= 26;
-                   }
-            
-                   //for(string[index] == 35; string[index] -= rotation;)      Causes segmentation error, but would be a neater way of laying out then a if statement.
-            
-
-                   if(string[index] == 32 + rotation)   //if string number equal to 32 it undoes the rotation ie. so spaces stay as spaces.
-                   {
-                       string[index] -= rotation;
-                   }  
-                   
-                   index++; //moves to the next letter in the array, to create loop.
-                }
- 
-            printf("%s\n", string);                       
+                char c;
+                fscanf(input, "%c", &c);        //scans file for single character the file pointer is on
+                
+                c = rotationEncoder(c, rotation);       //calls function rotationEncoder, passing values of c and rotation
+                
+                printf("%c", c);      //prints singular encoded character
+            }
             break;
         }
 
-        case 2: 
+        case 2:
+/*______________________________________________________________________________________________________________________________________________________________
+Case 1 -- Decypting Phrase with Rotation Cypher, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
+rotationDecoder, prints the text file to stdout decrypted.
+________________________________________________________________________________________________________________________________________________________________*/
+        {
+            FILE *input;
+            int rotation = 0;
+            
+            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            
+            printf("Enter Rotation Amount:");
+            scanf("%d", &rotation);     //Amount in which the alphabet is rotated by
+            
+            while(feof(input) == 0)     //Loop runs, until the file pointer has reached the end of the file
+            {
+                char c;
+                fscanf(input, "%c", &c);        //scans file for single character the file pointer is on
+                
+                c = rotationDecoder(c, rotation);     //calls function rotationEncoder, passing values of c and rotation
+                
+                printf("%c", c);      //prints singular encoded character
+            }
+
             break;
-        case 3: 
+        }
+
+        case 3:
             break;
         default:
             printf("You only have options 1 to 6\n");
@@ -62,3 +75,52 @@ int main()
     
     return 0;
 }
+/*______________________________________________________________________________________________________________________________________________________________
+Function rotationEncoder adds the rotation amount to the single character currently being read by the while loop in main c:26.
+It keeps spaces, fullstops, commas and the like the same as before being encypted.
+
+The inputs is the character being encoded (c) and the rotation amount (rotation); The return value is char x, which is what c has bevome after rotation.
+________________________________________________________________________________________________________________________________________________________________*/
+char rotationEncoder(char x, int r)
+{
+    
+        if(x > 31 && x < 65)     //keeps characters before capital alphabet the same, by subtracting the rotation prior to adding it
+    {
+        x -= r;
+    }  
+    
+    x += r;     //This moves all letters up by the designated rotation amount (kind of funny that i could do this for letters greater than 26 and it would do the same as the for statement above c:87)
+
+    if(x > 90)  //if string number greater than 90 it will subtract 26 ie. send the letters at the end of the alphabet to the start.
+    {
+        x -= 26;
+    }
+     return x;
+}
+
+
+/*____________________________________________________________________________________________________________________________________________________________
+Function rotationDecoder subtracts the rotation amount to the single character currently being read by the while loop in main c:26.
+It keeps spaces, fullstops, commas and the like the same as before being encypted.
+
+The inputs is the character being encoded (c) and the rotation amount (rotation); The return value is char x, which is what c has bevome after rotation.
+______________________________________________________________________________________________________________________________________________________________*/
+char rotationDecoder(char x, int r)
+{
+    
+        if(x > 31 && x < 65)    //keeps characters before capital alphabet the same, by subtracting the rotation and 26 to account for if statement below c:118
+    {
+        x = x + r - 26;
+    }  
+    
+    x -= r; //This moves all letters down by the designated rotation amount.
+
+    if(x < 65) //if string number less than 65 it will add 26 ie. send the letters at the start of the alphabet to the end.
+    {
+        x += 26;
+    }
+     return x;
+}
+/*______________________________________________________________________________________________________________________________________________________________
+
+________________________________________________________________________________________________________________________________________________________________*/
