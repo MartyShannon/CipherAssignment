@@ -1,21 +1,23 @@
 #include <stdio.h>
 #include <string.h>
+#include<stdlib.h>
 
 char rotationEncoder(char x, int r);
 char rotationDecoder(char x, int r);
+char substitutionEncoder(char s, char c);
 
 int main()
 {
     int f = 0;
     
-    printf("Type number for desired function:\n   1 -- Rotation Cypher Encryption\n   2 -- Rotation Cypher Decrytion\n   3 -- Substitution Cypher Enryption\n   4 -- Substitution Cypher Decyption\n   5 -- Decryption of Rotation Cypher (Rotation unknown)\n   6 -- Decrytion of a Substitution Cypher (substitution unkown)\n");
+    printf("Type number for desired function:\n   1 -- Rotation Cipher Encryption\n   2 -- Rotation Cipher Decrytion\n   3 -- Substitution Cipher Enryption\n   4 -- Substitution Cipher Decyption\n   5 -- Decryption of Rotation Cipher (Rotation unknown)\n   6 -- Decrytion of a Substitution Cipher (substitution unkown)\n");
     scanf("%d", &f);
     
     switch(f) 
     {
         case 1:
 /*______________________________________________________________________________________________________________________________________________________________
-Case 1 -- Encypting Phrase with Roatation Cyper, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
+Case 1 -- Encypting Phrase with Roatation Cipher, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
 rotationEncoder, prints the text file to stdout encrypted.
 ________________________________________________________________________________________________________________________________________________________________*/
         {
@@ -23,6 +25,12 @@ ________________________________________________________________________________
             int rotation = 0;
             
             input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be coded inside
+            
+            if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
             
             printf("Enter Rotation Amount:");
             scanf("%d", &rotation);     //Amount in which the alphabet is rotated by
@@ -36,12 +44,13 @@ ________________________________________________________________________________
                 
                 printf("%c", c);      //prints singular encoded character
             }
+            fclose(input);
             break;
         }
 
         case 2:
 /*______________________________________________________________________________________________________________________________________________________________
-Case 1 -- Decypting Phrase with Rotation Cypher, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
+Case 2 -- Decypting Phrase with Rotation Cipher, In this case a while loop has been created that reads a single character at a time from file code.txt and using function,
 rotationDecoder, prints the text file to stdout decrypted.
 ________________________________________________________________________________________________________________________________________________________________*/
         {
@@ -49,6 +58,11 @@ ________________________________________________________________________________
             int rotation = 0;
             
             input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
             
             printf("Enter Rotation Amount:");
             scanf("%d", &rotation);     //Amount in which the alphabet is rotated by
@@ -62,16 +76,133 @@ ________________________________________________________________________________
                 
                 printf("%c", c);      //prints singular encoded character
             }
-
+            fclose(input);
             break;
         }
 
         case 3:
+/*______________________________________________________________________________________________________________________________________________________________
+Case 3 -- Encyrpting Phrase with Substitution Cipher, 
+________________________________________________________________________________________________________________________________________________________________*/
+        {
+            FILE *input;
+            FILE *sub1;
+            char c;
+            char sub[26];
+            char alpha[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+            
+            sub1 = fopen("sub.txt", "r");
+            if (sub1 == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            while(feof(sub1) == 0)
+            {
+                fscanf(sub1, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", &sub[0], &sub[1], &sub[2], &sub[3], &sub[4], &sub[5], &sub[6], &sub[7], &sub[8], &sub[9], &sub[10], &sub[11], &sub[12], &sub[13], &sub[14], &sub[15], &sub[16], &sub[17], &sub[18], &sub[19], &sub[20], &sub[21], &sub[22], &sub[23], &sub[24], &sub[25]);
+            }
+            
+            fclose(sub1);
+            
+            while (1)
+            {
+                c = fgetc(input); // reading the file
+                for(int i=0; i < 26; i++)
+                {
+                    if(c == alpha[i])
+                    {
+                        c = sub[i];
+                        break;
+                    }
+
+                }
+                
+                if(c == EOF)
+                break;
+                
+                printf("%c", c);
+            }
+            fclose(input);
             break;
+        }
+
+
+        case 4:
+/*______________________________________________________________________________________________________________________________________________________________
+Case 4 -- Encyrpting Phrase with Substitution Cipher, 
+________________________________________________________________________________________________________________________________________________________________*/
+        {
+            FILE *input;
+            FILE *sub1;
+            char c;
+            char sub[26];
+            char alpha[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+            
+            sub1 = fopen("sub.txt", "r");
+            if (sub1 == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            while(feof(sub1) == 0)
+            {
+                fscanf(sub1, "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", &sub[0], &sub[1], &sub[2], &sub[3], &sub[4], &sub[5], &sub[6], &sub[7], &sub[8], &sub[9], &sub[10], &sub[11], &sub[12], &sub[13], &sub[14], &sub[15], &sub[16], &sub[17], &sub[18], &sub[19], &sub[20], &sub[21], &sub[22], &sub[23], &sub[24], &sub[25]);
+            }
+            
+            fclose(sub1);
+            
+            while (1)
+            {
+                c = fgetc(input); // reading the file
+                for(int i=0; i < 26; i++)
+                {
+                    if(c == sub[i])
+                    {
+                        c = alpha[i];
+                        break;
+                    }
+
+                }
+                
+                if(c == EOF)
+                break;
+                
+                printf("%c", c);
+            }
+            fclose(input);
+            break;
+        }
+
+        case 5:
+/*______________________________________________________________________________________________________________________________________________________________
+Case 5 -- Decripting Phrase with Substitution Cipher
+________________________________________________________________________________________________________________________________________________________________*/
+        {
+            
+        }
+
         default:
+        {
             printf("You only have options 1 to 6\n");
 
-    }
+        }
+    }   
     
     return 0;
 }
@@ -121,6 +252,18 @@ char rotationDecoder(char x, int r)
     }
      return x;
 }
+
+
 /*______________________________________________________________________________________________________________________________________________________________
 
 ________________________________________________________________________________________________________________________________________________________________*/
+char substitutionEncoder(char s, char c)
+{
+    c = s;
+    return c;
+}
+
+
+/*______________________________________________________________________________________________________________________________________________________________
+
+__________________________________________________________________________________________________________________________________________________*/
