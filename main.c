@@ -5,7 +5,7 @@
 char rotationEncoder(char x, int r);
 char rotationDecoder(char x, int r);
 char substitutionEncoder(FILE*, char c, char a[]);
-int menu2(int g);
+void menu2(int g);
 
 int main()
 {
@@ -26,9 +26,13 @@ ________________________________________________________________________________
             int rotation = 0;
             
             input = fopen("phrase.txt", "r");     //Opening file code.txt to read, this has the text to be coded inside
-            output = fopen("code.txt", "w");
-            
             if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            output = fopen("code.txt", "w");
+            if (output == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
@@ -52,22 +56,10 @@ ________________________________________________________________________________
             fclose(input);
             fclose(output);
             
-            int g;
+            int g = 0;
             printf("\n\n____________________________________\nWhat would you like to do now?\n     1 -- back to menu\n     2 -- Exit Program\n");
             scanf("%d", &g);
-            
-            switch(g)
-            {
-                case 1:
-                    system("clear");
-                    system("./a.out");
-                case 2:
-                {
-                    system("clear");
-                    return 0;
-                }
-
-            }
+            menu2(g);
 
         }
 
@@ -78,10 +70,18 @@ rotationDecoder, prints the text file to stdout decrypted.
 ________________________________________________________________________________________________________________________________________________________________*/
         {
             FILE *input;
+            FILE *output;
             int rotation = 0;
             
-            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            input = fopen("phrase.txt", "r");     //Opening file code.txt to read, this has the text to be coded inside
             if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            output = fopen("code.txt", "w");
+            if (output == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
@@ -98,10 +98,13 @@ ________________________________________________________________________________
                 c = rotationDecoder(c, rotation);     //calls function rotationEncoder, passing values of c and rotation
                 
                 printf("%c", c);      //prints singular encoded character
+                putc(c, output);
             }
-            fclose(input);
             
-            int g;
+            fclose(input);
+            fclose(output);
+            
+            int g = 0;
             printf("\n\n____________________________________\nWhat would you like to do now?\n     1 -- back to menu\n     2 -- Exit Program\n");
             scanf("%d", &g);
             menu2(g);
@@ -112,22 +115,27 @@ ________________________________________________________________________________
 Case 3 -- Encyrpting Phrase with Substitution Cipher, 
 ________________________________________________________________________________________________________________________________________________________________*/
         {
-            FILE *input;
-            FILE *sub1;
-            char c, s1;
-            //char sub[26];
+            FILE *input, *output;
+            FILE *key;
+            char c, s;
             char alpha[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
             
-            sub1 = fopen("sub.txt", "r");
-            if (sub1 == NULL)
+            key = fopen("key.txt", "r");
+            if (key == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
             }
 
-            
-            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            input = fopen("phrase.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
             if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            output = fopen("code.txt", "w");
+            if (output == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
@@ -138,25 +146,31 @@ ________________________________________________________________________________
                 c = fgetc(input); // reading the file
                 for(int i=0; i < 26; i++)
                 {
-                    fseek(sub1, i, SEEK_SET);
-                    s1 = fgetc(sub1);
+                    fseek(key, i, SEEK_SET);
+                    s = fgetc(key);
                     
                     if(c == alpha[i])
                     {
-                        c = s1;
+                        c = s;
                         break;
-                }
+                    }
 
-            }
-                
+                }    
                 if(c == EOF)
-                break;
-                
+                    break;
+                    
                 printf("%c", c);
+                putc(c, output);
             }
+            
             fclose(input);
-            fclose(sub1);
-            break;
+            fclose(key);
+            fclose(output);
+            
+            int g = 0;
+            printf("\n\n____________________________________\nWhat would you like to do now?\n     1 -- back to menu\n     2 -- Exit Program\n");
+            scanf("%d", &g);
+            menu2(g);
         }
 
 
@@ -165,20 +179,27 @@ ________________________________________________________________________________
 Case 4 -- Encyrpting Phrase with Substitution Cipher, cmmc
 ________________________________________________________________________________________________________________________________________________________________*/
         {
-            FILE *input;
-            FILE *sub1;
-            char c, s1;
+            FILE *input, *output;
+            FILE *key;
+            char c, s;
             char alpha[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
             
-            sub1 = fopen("sub.txt", "r");
-            if (sub1 == NULL)
+            key = fopen("key.txt", "r");
+            if (key == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
             }
             
-            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            input = fopen("phrase.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
             if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            output = fopen("code.txt", "w");
+            if (output == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
@@ -189,10 +210,10 @@ ________________________________________________________________________________
                 c = fgetc(input); // reading the file
                 for(int i=0; i < 26; i++)
                 {
-                    fseek(sub1, i, SEEK_SET);
-                    s1 = fgetc(sub1);
+                    fseek(key, i, SEEK_SET);
+                    s = fgetc(key);
                     
-                    if(c == s1)
+                    if(c == s)
                     {
                         c = alpha[i];
                         break;
@@ -204,11 +225,17 @@ ________________________________________________________________________________
                 break;
                 
                 printf("%c", c);
+                putc(c, output);
             }
-        printf("\n\n");
-        fclose(sub1);
-        fclose(input);
-        break;
+            printf("\n\n");
+            fclose(key);
+            fclose(input);
+            fclose(output);
+        
+            int g = 0;
+            printf("\n\n____________________________________\nWhat would you like to do now?\n     1 -- back to menu\n     2 -- Exit Program\n");
+            scanf("%d", &g);
+            menu2(g);
         }
 
         case 5:
@@ -216,11 +243,18 @@ ________________________________________________________________________________
 Case 5 -- Decripting Phrase with Substitution Cipher
 ________________________________________________________________________________________________________________________________________________________________*/
         {
-            FILE *input;
+            FILE *input, *output;
             int rotation = 0;
             
-            input = fopen("code.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
+            input = fopen("phrase.txt", "r");     //Opening file code.txt to read, this has the text to be decoded inside
             if (input == NULL)
+            {
+                printf("Error opening file!");    //Program prints error message and closes if file is not found            
+                exit(0);
+            }
+            
+            output = fopen("code.txt", "w");
+            if (output == NULL)
             {
                 printf("Error opening file!");    //Program prints error message and closes if file is not found            
                 exit(0);
@@ -243,14 +277,18 @@ ________________________________________________________________________________
             }
 
             fclose(input);
-            break;
+            
+            int g = 0;
+            printf("\n\n____________________________________\nWhat would you like to do now?\n     1 -- back to menu\n     2 -- Exit Program\n");
+            scanf("%d", &g);
+            menu2(g);
         }
 
 
         
         case 6:
         {
-            return 0;
+            exit(0);
         }
 
 
@@ -312,7 +350,10 @@ char rotationDecoder(char x, int r)
 }
 
 
-int menu2(int g)
+/*____________________________________________________________________________________________________________________________________________________________
+Function 
+______________________________________________________________________________________________________________________________________________________________*/
+void menu2(int g)
 {
     switch(g)
             {
@@ -322,7 +363,7 @@ int menu2(int g)
                 case 2:
                 {
                     system("clear");
-                    return 0;
+                    exit(0);
                 }
 
             }
