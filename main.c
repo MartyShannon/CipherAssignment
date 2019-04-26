@@ -4,7 +4,6 @@
 
 char rotationEncoder(char x, int r);
 char rotationDecoder(char x, int r);
-char substitutionEncoder(FILE*, char c, char a[]);
 void menu2(int g);
 
 int main()
